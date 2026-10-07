@@ -1,0 +1,12 @@
+{
+  "date": "1970-01-01",
+  "updated_at": "1970-01-01T00:00:00+09:00",
+  "ilgin": "-",
+  "overall": "아직 운세가 만들어지지 않았어요.",
+  "slots": {
+    "morning": {"text": "준비 중", "color": {"hex": "#808080", "name": "회색", "reason": "자리표시자"}},
+    "lunch":   {"text": "준비 중", "color": {"hex": "#808080", "name": "회색", "reason": "자리표시자"}},
+    "evening": {"text": "준비 중", "color": {"hex": "#808080", "name": "회색", "reason": "자리표시자"}}
+  },
+  "summary": "아직 운세가 없어요."
+}
