@@ -2,6 +2,7 @@ from datetime import datetime
 
 from .color import slot_color
 from .ganzhi import KST, day_pillar_of, pillars
+from .topics import topic_scores
 from .wuxing import needed_element
 
 ALL_SLOTS = ["morning", "lunch", "evening"]
@@ -29,4 +30,5 @@ def analyze(chart: dict[str, str], now: datetime, slots: list[str]) -> dict:
         "chart": chart,
         "needed_element": element,
         "slots": result_slots,
+        "topics": topic_scores(chart, ilgin),
     }

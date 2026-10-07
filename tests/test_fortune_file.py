@@ -7,7 +7,7 @@ TOP_KEYS = {"date", "updated_at", "ilgin", "overall", "slots", "summary"}
 
 def test_placeholder_has_required_keys():
     doc = json.loads((ROOT / "docs" / "fortune.json").read_text(encoding="utf-8"))
-    assert set(doc) == TOP_KEYS
+    assert TOP_KEYS <= set(doc) <= TOP_KEYS | {"topics"}
     assert set(doc["slots"]) == {"morning", "lunch", "evening"}
     for slot in doc["slots"].values():
         assert set(slot) == {"text", "color"}

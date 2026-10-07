@@ -16,6 +16,18 @@ def _slot_doc(texts: dict, analysis: dict, slot: str) -> dict:
         raise ValueError(f"{slot} 슬롯 정보가 부족해요: {exc}") from exc
 
 
+def _topics_doc(texts: dict, analysis: dict) -> dict:
+    """점수·근거는 analysis(코드), 글은 texts["topics"][키]["text"] 에서. 글이 없으면 text 를 생략한다."""
+    out = {}
+    for key, t in analysis["topics"].items():
+        entry = {"label": t["label"], "score": t["score"], "facts": t["facts"]}
+        text = texts.get("topics", {}).get(key, {}).get("text")
+        if text is not None:
+            entry["text"] = text
+        out[key] = entry
+    return out
+
+
 def publish(texts: dict, analysis: dict, mode: str, path: Path, now: datetime) -> dict:
     """검증을 통과한 문서만 path 에 저장하고 그 문서를 돌려준다. 실패하면 ValueError 이고 파일은 그대로다.
 
@@ -33,6 +45,7 @@ def publish(texts: dict, analysis: dict, mode: str, path: Path, now: datetime) -
                 "overall": texts["overall"],
                 "slots": {s: _slot_doc(texts, analysis, s) for s in ("morning", "lunch", "evening")},
                 "summary": texts["summary"],
+                "topics": _topics_doc(texts, analysis),
             }
         except KeyError as exc:
             raise ValueError(f"항목이 부족해요: {exc}") from exc

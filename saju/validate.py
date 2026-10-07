@@ -3,11 +3,34 @@ from datetime import datetime
 
 TOP_KEYS = ("date", "updated_at", "ilgin", "overall", "slots", "summary")
 SLOTS = ("morning", "lunch", "evening")
+TOPICS = ("love", "money", "work", "health", "people")
 _HEX = re.compile(r"#[0-9A-Fa-f]{6}")
 
 
 def _blank(v) -> bool:
     return not isinstance(v, str) or not v.strip()
+
+
+def _validate_topics(topics) -> list[str]:
+    if not isinstance(topics, dict):
+        return ["topics 형식이 잘못됐어요"]
+    errors = []
+    for key in TOPICS:
+        t = topics.get(key)
+        if not isinstance(t, dict):
+            errors.append(f"topics.{key} 가 없어요")
+            continue
+        if _blank(t.get("label")):
+            errors.append(f"topics.{key}.label 이 비어 있어요")
+        score = t.get("score")
+        if isinstance(score, bool) or not isinstance(score, int) or not 0 <= score <= 100:
+            errors.append(f"topics.{key}.score 는 0~100 정수여야 해요")
+        facts = t.get("facts")
+        if not isinstance(facts, list) or not facts or any(_blank(f) for f in facts):
+            errors.append(f"topics.{key}.facts 가 비어 있어요")
+        if "text" in t and _blank(t["text"]):
+            errors.append(f"topics.{key}.text 가 비어 있어요")
+    return errors
 
 
 def validate(doc: dict) -> list[str]:
@@ -25,6 +48,8 @@ def validate(doc: dict) -> list[str]:
                 errors.append("updated_at 에 시간대(+09:00)가 없어요")
         except (TypeError, ValueError):
             errors.append("updated_at 형식이 잘못됐어요")
+    if "topics" in doc:
+        errors.extend(_validate_topics(doc["topics"]))
     slots = doc.get("slots")
     if not isinstance(slots, dict):
         return errors

@@ -70,3 +70,25 @@ def test_invalid_texts_leave_file_untouched(tmp_path):
     with pytest.raises(ValueError):
         publish(_texts(ALL_SLOTS, summary=""), analyze(CHART, now, ALL_SLOTS), "full", path, now)
     assert path.read_bytes() == original
+
+
+def test_publish_full_writes_topics_with_and_without_text(tmp_path):
+    path = tmp_path / "fortune.json"
+    now = datetime(2024, 3, 10, 7, 0, tzinfo=KST)
+    texts = _texts(ALL_SLOTS)
+    texts["topics"] = {"love": {"text": "연애 글"}}
+    doc = publish(texts, analyze(CHART, now, ALL_SLOTS), "full", path, now)
+    assert set(doc["topics"]) == {"love", "money", "work", "health", "people"}
+    assert doc["topics"]["love"]["text"] == "연애 글"
+    assert "text" not in doc["topics"]["money"] and doc["topics"]["money"]["facts"]
+    assert validate(doc) == []
+
+
+def test_validate_rejects_bad_topics():
+    now = datetime(2024, 3, 10, 7, 0, tzinfo=KST)
+    import tempfile, pathlib
+    doc = publish(_texts(ALL_SLOTS), analyze(CHART, now, ALL_SLOTS), "full", pathlib.Path(tempfile.mkdtemp()) / "f.json", now)
+    doc["topics"]["love"]["score"] = 150
+    del doc["topics"]["work"]
+    errs = validate(doc)
+    assert any("love.score" in e for e in errs) and any("work" in e for e in errs)

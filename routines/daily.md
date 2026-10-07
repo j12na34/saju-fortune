@@ -14,6 +14,8 @@
    - `reason` 은 "필요 오행이 ○이고 이 시간대 시주가 ○이라서 ○색 계열" 처럼 분석 결과의 사실로 설명한다.
    - 형식 (`full`):
      `{"overall": "...", "summary": "알림용 한두 줄", "slots": {"morning": {"text": "...", "reason": "..."}, "lunch": {...}, "evening": {...}}}`
+   - `full` 일 때는 `topics` 도 쓴다: `"topics": {"love": {"text": "..."}, "money": {...}, "work": {...}, "health": {...}, "people": {...}}`.
+     분석 결과의 `topics.<키>.facts` 와 `score` 만 근거로 2~3문장. 점수·근거를 바꾸지 않고, 건강·재물·연애를 단정하지 않는다.
    - 형식 (`lunch`/`evening`): `slots` 에 해당 시간대만. `summary` 는 바꿀 때만 넣는다.
 5. `python -m saju.cli publish --mode <모드> --texts <texts.json>`
    - 실패 메시지가 나오면 파일은 그대로다. texts 를 고쳐서 한 번만 다시 시도하고, 그래도 실패하면 종료한다.
