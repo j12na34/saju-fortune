@@ -63,7 +63,7 @@
   - `test_ipchun_boundary`: 2024-02-04 16:00 → 년 `癸卯`, 17:00 → 년 `甲辰` (입춘 16:27 KST).
   - `test_month_boundary`: 같은 입춘 전후 월주가 `乙丑` → `丙寅`.
   - `test_zi_hour`: 2024-03-10 23:30과 2024-03-11 00:30의 시주 지지가 모두 `子`. 일주 결과는 현재 라이브러리 동작을 확인해 그대로 expected에 고정하고 주석으로 "자시 처리 규칙" 명시.
-  - `test_utc_aware_input`: `datetime(2024,2,4,7,30,tzinfo=UTC)`(=KST 16:30)의 년주가 `甲辰`이 아니라 `癸卯`가 아님을 확인 → 실제로는 16:30 > 16:27이므로 `甲辰`.
+  - `test_utc_aware_input`: `datetime(2024,2,4,7,30,tzinfo=UTC)`(=KST 16:30, 입춘 16:27 이후)의 년주가 `甲辰`.
 - [ ] **Step 2: 실패 확인** — `python -m pytest tests/test_ganzhi.py -v` → FAIL(모듈 없음).
 - [ ] **Step 3: `pillars`, `day_pillar_of` 구현.**
 - [ ] **Step 4: 통과 확인.** 값이 다르면 구현이 아니라 기대값 출처(공개 만세력)부터 다시 확인해 사용자에게 보고.
